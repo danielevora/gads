@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+﻿using Gads;
 
 // See https://aka.ms/new-console-template for more information
 Console.WriteLine("Hello, World!");
@@ -13,25 +13,9 @@ var path = args[0];
 //https://stackoverflow.com/questions/4254339/how-to-loop-through-all-the-files-in-a-directory-in-c-net
 var filePaths = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
 
+var parser = new Parser(new List<IParseStrategy>() { new SocialSecurityParseStrategy() });
+
 foreach (var filePath in filePaths) 
 {
-    ProcessFile(filePath);
-}
-
-void ProcessFile(string filePath)
-{
-    var pattern = "(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}";
-    var r = new Regex(pattern);
-
-    var lines = File.ReadAllLines(filePath);
-    foreach (var line in lines)
-    {
-        var match = r.Match(line);
-        if (match.Success)
-        {
-            Console.WriteLine($"Found Match {match.Value} in {path}");
-            Console.WriteLine(line);
-        }
-    }
-    Console.WriteLine($"Processed file '{path}'.");
+    parser.Parse(filePath);
 }
