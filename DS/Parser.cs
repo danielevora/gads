@@ -1,5 +1,4 @@
 namespace Gads;
-
 public class Parser
 {
     private readonly IEnumerable<IParseStrategy> parseStrategies;

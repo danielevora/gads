@@ -1,12 +1,8 @@
 using System.Text.RegularExpressions;
-namespace Gads;
 
+namespace Gads;
 public class SocialSecurityParseStrategy : IParseStrategy
 {
-    public SocialSecurityParseStrategy()
-    {
-    }
-
     public bool CanParse()
     {
         return true;
