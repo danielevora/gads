@@ -1,8 +1,5 @@
 ﻿using Gads;
 
-// See https://aka.ms/new-console-template for more information
-
-
 var hasArgs = args.Length > 0;
 var path = string.Empty;
 
@@ -16,11 +13,31 @@ else
     path = Console.ReadLine();
 }
 
-var filePaths = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
-
-var parser = new Parser(new List<IParseStrategy>() { new SocialSecurityParseStrategy(), new CreditCardParseStrategy() });
-
-foreach (var filePath in filePaths) 
+try
 {
-    parser.Parse(filePath);
+    var filePaths = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
+    
+    // TODO: Offload 'new'
+    var parser = new Parser(new List<IParseStrategy>() { new SocialSecurityParseStrategy(), new CreditCardParseStrategy() });
+
+    foreach (var filePath in filePaths)
+    {
+        parser.Parse(filePath);
+    }
+}
+catch (PathTooLongException ex)
+{
+    Console.WriteLine($"An error occurred at given path: {path}. Path too long.");
+}
+catch (DirectoryNotFoundException ex)
+{
+    Console.WriteLine($"An error occurred at given path: {path}. Path not found.");
+}
+catch (UnauthorizedAccessException ex)
+{
+    Console.WriteLine($"An error occurred at given path: {path}. Access denied at path.");
+}
+catch (IOException ex)
+{
+    Console.WriteLine($"An error occurred at given path: {path}. Could not read files at location.");
 }
