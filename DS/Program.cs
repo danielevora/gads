@@ -1,4 +1,6 @@
 ﻿using Gads;
+using Serilog;
+using Serilog.Sinks.File;
 
 var hasArgs = args.Length > 0;
 var path = string.Empty;
@@ -12,6 +14,14 @@ else
     Console.WriteLine("Input drive scanner path...");
     path = Console.ReadLine();
 }
+
+var gadsOutputTemplate = "{LogLevel:u1}|{SourceContext}|{Message:l}|{Properties}{NewLine}{Exception}";
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .Enrich.FromLogContext()
+    .WriteTo.File("output.txt", outputTemplate: gadsOutputTemplate)
+    .CreateLogger();
 
 try
 {

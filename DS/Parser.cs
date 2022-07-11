@@ -1,3 +1,5 @@
+using Serilog.Context;
+
 namespace Gads;
 public class Parser
 {
@@ -10,16 +12,20 @@ public class Parser
 
     public void Parse(string filePath)
     {
-        foreach (var line in File.ReadAllLines(filePath))
+        var lineNum = 1;
+        using (LogContext.PushProperty("path", filePath))
         {
-            foreach (var strategy in parseStrategies)
+            foreach (var line in File.ReadAllLines(filePath))
             {
-                if (strategy.CanParse())
+                using (LogContext.PushProperty("lineNum", lineNum))
                 {
-                    strategy.Parse(line);
+                    foreach (var strategy in parseStrategies)
+                    {
+                        strategy.Parse(line);
+                    }
                 }
+                lineNum += 1;
             }
         }
-        Console.WriteLine($"Processed file '{filePath}'.");
     }
 }
