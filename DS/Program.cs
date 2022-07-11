@@ -1,6 +1,5 @@
 ﻿using Gads;
 using Serilog;
-using Serilog.Sinks.File;
 
 var hasArgs = args.Length > 0;
 var path = string.Empty;
